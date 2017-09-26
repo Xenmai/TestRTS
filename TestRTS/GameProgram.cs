@@ -83,7 +83,7 @@ namespace TestRTS
             // Set up the system console.
             SysConsole.Init();
             // Construct and run the game itself.
-            new Game().Run();
+            new Game().Start();
         }
     }
 }
