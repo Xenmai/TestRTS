@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4e193464-4566-4bb0-8ef1-3f6312fbf35a}</ProjectGuid>
+    <ProjectGuid>{4E193464-4566-4BB0-8EF1-3F6312FBF35A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>TestRTS</RootNamespace>
     <AssemblyName>TestRTS</AssemblyName>
@@ -32,36 +32,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BEPUphysics">
-      <HintPath>.\BEPUphysics.dll</HintPath>
-    </Reference>
-    <Reference Include="BEPUutilities">
-      <HintPath>.\BEPUutilities.dll</HintPath>
-    </Reference>
-    <Reference Include="csogg">
-      <HintPath>.\csogg.dll</HintPath>
-    </Reference>
-    <Reference Include="csvorbis">
-      <HintPath>.\csvorbis.dll</HintPath>
-    </Reference>
-    <Reference Include="FreneticDataSyntax">
-      <HintPath>.\FreneticDataSyntax.dll</HintPath>
-    </Reference>
-    <Reference Include="FreneticGameCore">
-      <HintPath>.\FreneticGameCore.dll</HintPath>
-    </Reference>
-    <Reference Include="FreneticGameGraphics">
-      <HintPath>.\FreneticGameGraphics.dll</HintPath>
-    </Reference>
-    <Reference Include="FreneticScript">
-      <HintPath>.\FreneticScript.dll</HintPath>
-    </Reference>
-    <Reference Include="LZ4">
-      <HintPath>.\LZ4.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+    <Reference Include="BEPUphysics, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31f6a8732a21de19, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\OpenTK.dll</HintPath>
+      <HintPath>..\FreneticGameEngine\FreneticGameCore\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUutilities, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31f6a8732a21de19, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FreneticGameEngine\FreneticGameCore\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="csogg, Version=1.0.5611.37166, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FreneticGameEngine\FreneticGameGraphics\csogg.dll</HintPath>
+    </Reference>
+    <Reference Include="csvorbis, Version=1.0.5611.37167, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FreneticGameEngine\FreneticGameGraphics\csvorbis.dll</HintPath>
+    </Reference>
+    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FreneticGameEngine\FreneticGameCore\LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK, Version=2.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FreneticGameEngine\FreneticGameGraphics\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,12 +66,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameEntities\CameraControllerProperty.cs" />
+    <Compile Include="GameEntities\Entity2DRenderableBaseCircleProperty.cs" />
+    <Compile Include="GameEntities\GameInterfaces\ISelectable.cs" />
+    <Compile Include="GameEntities\PlayerControllerProperty.cs" />
+    <Compile Include="GameEntities\RotatingEntityProperty.cs" />
+    <Compile Include="GameEntities\UnitEntityProperty.cs" />
     <Compile Include="MainGame\Game.cs" />
     <Compile Include="GameProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FreneticGameEngine\FreneticDataSyntax\FreneticDataSyntax\FreneticDataSyntax.csproj">
+      <Project>{1db47d6a-4225-4f25-8559-2c6292496953}</Project>
+      <Name>FreneticDataSyntax</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FreneticGameEngine\FreneticGameCore\FreneticGameCore.csproj">
+      <Project>{c608fd6d-fb74-4a0b-affe-d24ac7deb3e3}</Project>
+      <Name>FreneticGameCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FreneticGameEngine\FreneticGameGraphics\FreneticGameGraphics.csproj">
+      <Project>{cf20c1b4-c199-4d11-8053-ecf7d18b4b7b}</Project>
+      <Name>FreneticGameGraphics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FreneticGameEngine\FreneticScript\FreneticScript\FreneticScript.csproj">
+      <Project>{0672dd5f-6f33-4853-bd6e-8716d3abc7ad}</Project>
+      <Name>FreneticScript</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
