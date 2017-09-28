@@ -43,29 +43,45 @@ namespace TestRTS.MainGame
                 BoxSize = new Vector2(200, 200),
                 BoxColor = new Color4F(1f, 0.2f, 0.2f, 1f),
                 BoxTexture = Client.Engine2D.Textures.White,
-                RenderAt = new Location(0, 0, -10),
-                RenderingPriorityOrder = 0,
                 CastShadows = false
             }, new ClientEntityPhysicsProperty()
             {
-                Position = new Location(0, 0, -10),
+                Position = new Location(0, 0, 0),
                 Shape = new EntityBoxShape() { Size = new Location(200, 200, 10) },
                 Mass = 0
             });
-            // Player
+            // Entity 1
             Client.Engine2D.SpawnEntity(new EntitySimple2DRenderableBoxProperty()
             {
                 BoxSize = new Vector2(10, 10),
                 BoxColor = new Color4F(0.2f, 1f, 0.2f, 1f),
-                BoxTexture = Client.Engine2D.Textures.White,
-                RenderAt = new Location(25, 25, 0),
-                RenderAngle = 0f
+                BoxTexture = Client.Engine2D.Textures.White
             }, new ClientEntityPhysicsProperty()
             {
-                Position = new Location(25, 25, 0),
+                Position = new Location(75, 75, 10),
                 Shape = new EntityBoxShape() { Size = new Location(10, 10, 10) },
                 Mass = 10
-            }, new CameraControllerProperty());
+            }, new UnitEntityProperty()
+            {
+                UnitSize = 10f
+            });
+            // Entity 2
+            Client.Engine2D.SpawnEntity(new EntitySimple2DRenderableBoxProperty()
+            {
+                BoxSize = new Vector2(15, 15),
+                BoxColor = new Color4F(0.8f, 0.4f, 0.4f, 1f),
+                BoxTexture = Client.Engine2D.Textures.White
+            }, new ClientEntityPhysicsProperty()
+            {
+                Position = new Location(20, 35, 10),
+                Shape = new EntityBoxShape() { Size = new Location(15, 15, 10) },
+                Mass = 20
+            }, new UnitEntityProperty()
+            {
+                UnitSize = 15f
+            });
+            // Camera
+            Client.Engine2D.SpawnEntity(new CameraControllerProperty());
             // Sky light
             Client.Engine2D.SpawnEntity(new EntityLight2DCasterProperty()
             {

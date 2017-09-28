@@ -4,6 +4,7 @@ using FreneticGameGraphics.ClientSystem.EntitySystem;
 using OpenTK.Input;
 using System.Collections.Generic;
 using System.Linq;
+using TestRTS.GameEntities.GameInterfaces;
 
 namespace TestRTS.GameEntities
 {
@@ -34,7 +35,6 @@ namespace TestRTS.GameEntities
             Engine.Window.KeyDown -= Window_KeyDown;
             Engine.Window.KeyUp -= Window_KeyUp;
             Entity.OnTick -= Tick;
-            Entity.OnSpawnEvent.RemoveBySource(this);
         }
 
         /// <summary>
@@ -44,25 +44,7 @@ namespace TestRTS.GameEntities
         {
             if (KeySpace)
             {
-                if (Selected != null)
-                {   
-                    if (Target != null)
-                    {
-                        for (int i =01; i < Selected.Count<ClientEntity>(); i++)
-                        {
-                            if (Selected.ElementAt<ClientEntity>(i) == Target)
-                            {
-                                Target = Selected.ElementAt<ClientEntity>(i + 1);
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Target = Selected.First<ClientEntity>();
-                    }
-                    Engine2D.ViewCenter = new OpenTK.Vector2((float) Target.LastKnownPosition.X, (float) Target.LastKnownPosition.Y);
-                }
+                
             }
             if (KeyZoomIn)
             {
@@ -106,28 +88,7 @@ namespace TestRTS.GameEntities
         /// Is the forward key down.
         /// </summary>
         public bool KeyZoomOut;
-
-        /// <summary>
-        /// Tracks key releases.
-        /// </summary>
-        /// <param name="sender">Sender.</param>
-        /// <param name="e">Event data.</param>
-        private void Window_KeyUp(object sender, KeyboardKeyEventArgs e)
-        {
-            switch (e.Key)
-            {
-                case Key.Space:
-                    KeySpace = false;
-                    break;
-                case Key.Plus:
-                    KeyZoomIn = false;
-                    break;
-                case Key.Minus:
-                    KeyZoomOut = false;
-                    break;
-            }
-        }
-
+        
         /// <summary>
         /// Tracks key presses.
         /// </summary>
@@ -138,7 +99,26 @@ namespace TestRTS.GameEntities
             switch (e.Key)
             {
                 case Key.Space:
-                    KeySpace = true;
+                    if (Selected != null)
+                    {
+                        if (Target != null)
+                        {
+                            int i = Selected.IndexOf(Target);
+                            if (i + 1 == Selected.Count<ClientEntity>())
+                            {
+                                Target = Selected.First<ClientEntity>();
+                            }
+                            else
+                            {
+                                Target = Selected.ElementAt<ClientEntity>(i + 1);
+                            }
+                        }
+                        else
+                        {
+                            Target = Selected.First<ClientEntity>();
+                        }
+                        Engine2D.ViewCenter = new OpenTK.Vector2((float)Target.LastKnownPosition.X, (float)Target.LastKnownPosition.Y);
+                    }
                     break;
                 case Key.Plus:
                     KeyZoomIn = true;
@@ -148,11 +128,29 @@ namespace TestRTS.GameEntities
                     break;
             }
         }
+        
+        /// <summary>
+        /// Tracks key releases.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event data.</param>
+        private void Window_KeyUp(object sender, KeyboardKeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Plus:
+                    KeyZoomIn = false;
+                    break;
+                case Key.Minus:
+                    KeyZoomOut = false;
+                    break;
+            }
+        }
 
         /// <summary>
         /// Which entity is selected.
         /// </summary>
-        public IEnumerable<ClientEntity> Selected = null;
+        public List<ClientEntity> Selected = null;
 
         /// <summary>
         /// Which entity is selected.
@@ -173,8 +171,15 @@ namespace TestRTS.GameEntities
         {
             if (e.Button == MouseButton.Left)
             {
-                Selected = null;
-                First = new Location(Engine2D.MouseCoords.X, Engine2D.MouseCoords.Y, 15f);
+                if (Selected != null)
+                {
+                    foreach (ClientEntity ent in Selected)
+                    {
+                        ent?.SignalAllInterfacedProperties<ISelectable>((p) => p.Deselect());
+                    }
+                    Selected = null;
+                }
+                First = new Location(Engine2D.MouseCoords.X, Engine2D.MouseCoords.Y, -5f);
             }
         }
 
@@ -193,8 +198,12 @@ namespace TestRTS.GameEntities
                     Min = First,
                     Max = First
                 };
-                box.Include(new Location(Engine2D.MouseCoords.X, Engine2D.MouseCoords.Y, -5f));
-                Selected = Engine2D.PhysicsWorld.GetEntitiesInBox(box);
+                box.Include(new Location(Engine2D.MouseCoords.X, Engine2D.MouseCoords.Y, 5f));
+                Selected = Engine2D.PhysicsWorld.GetEntitiesInBox(box).Where((ent) => ent.GetAllInterfacedProperties<ISelectable>().Count() > 0).ToList<ClientEntity>();
+                foreach (ClientEntity ent in Selected)
+                {
+                    ent?.SignalAllInterfacedProperties<ISelectable>((p) => p.Select());
+                }
             }
         }
     }

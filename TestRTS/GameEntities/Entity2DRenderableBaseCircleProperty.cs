@@ -1,12 +1,7 @@
-﻿using FreneticGameGraphics.ClientSystem;
+﻿using FreneticGameCore;
+using FreneticGameGraphics.ClientSystem;
 using FreneticGameGraphics.ClientSystem.EntitySystem;
 using FreneticGameGraphics.GraphicsHelpers;
-using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestRTS.GameEntities
 {
@@ -28,7 +23,7 @@ namespace TestRTS.GameEntities
         /// <summary>
         /// What color to render the box as.
         /// </summary>
-        public Vector4 BoxColor = Vector4.One;
+        public Color4F BoxColor = Color4F.White;
 
         /// <summary>
         /// Render the entity as seen normally, in 2D.
@@ -45,8 +40,8 @@ namespace TestRTS.GameEntities
                 CircleTexture.Bind();
             }
             context.Engine.RenderHelper.SetColor(BoxColor);
-            //context.Engine.RenderHelper.RenderRectangle(context, (float)RenderAt.X + BoxUpLeft.X, (float)RenderAt.Y + BoxUpLeft.Y,
-            //    (float)RenderAt.X + BoxDownRight.X, (float)RenderAt.Y + BoxDownRight.Y, new Vector3(BoxUpLeft.X / sz.X, BoxDownRight.Y / sz.Y, RenderAngle));
+            context.Engine.RenderHelper.RenderRectangle(context, (float)RenderAt.X - Radius, (float)RenderAt.Y + Radius,
+                (float)RenderAt.X + Radius, (float)RenderAt.Y - Radius);
         }
     }
 }

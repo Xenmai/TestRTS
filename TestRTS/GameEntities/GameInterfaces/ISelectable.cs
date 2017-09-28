@@ -15,5 +15,10 @@ namespace TestRTS.GameEntities.GameInterfaces
         /// Select the object.
         /// </summary>
         void Select();
+
+        /// <summary>
+        /// Deselect the object.
+        /// </summary>
+        void Deselect();
     }
 }
