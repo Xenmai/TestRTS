@@ -23,7 +23,7 @@ namespace TestRTS.GameEntities
         {
             Effect = Engine2D.SpawnEntity(new Entity2DRenderableBaseCircleProperty()
             {
-                Radius = UnitSize * 0.7f,
+                Radius = UnitSize * 0.75f,
                 CircleTexture = Entity.Engine.Textures.White,
                 RenderAt = Entity.LastKnownPosition - new Location(0, 0, 5),
                 CastShadows = false

@@ -1,7 +1,9 @@
 ﻿using FreneticGameCore;
 using FreneticGameCore.Collision;
 using FreneticGameGraphics.ClientSystem.EntitySystem;
+using OpenTK;
 using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TestRTS.GameEntities.GameInterfaces;
@@ -42,10 +44,6 @@ namespace TestRTS.GameEntities
         /// </summary>
         public void Tick()
         {
-            if (KeySpace)
-            {
-                
-            }
             if (KeyZoomIn)
             {
                 Engine2D.Zoom -= 0.001f;
@@ -53,6 +51,14 @@ namespace TestRTS.GameEntities
             if (KeyZoomOut)
             {
                 Engine2D.Zoom += 0.001f;
+            }
+            if (Entity.HasProperty<EntitySimple2DRenderableBoxProperty>())
+            {
+                Vector2 current = Engine2D.MouseCoords;
+                Vector2 center = (First + current) * 0.5f;
+                Vector2 size = new Vector2(Math.Abs(First.X - current.X), Math.Abs(First.Y - current.Y));
+                Entity.GetProperty<EntitySimple2DRenderableBoxProperty>().RenderAt = new Location(center.X, center.Y, 5f);
+                Entity.GetProperty<EntitySimple2DRenderableBoxProperty>().BoxSize = size;
             }
             OpenTK.Vector2 motion = OpenTK.Vector2.Zero;
             if (Engine2D.Window.Mouse.X < 50)
@@ -88,7 +94,7 @@ namespace TestRTS.GameEntities
         /// Is the forward key down.
         /// </summary>
         public bool KeyZoomOut;
-        
+
         /// <summary>
         /// Tracks key presses.
         /// </summary>
@@ -160,7 +166,7 @@ namespace TestRTS.GameEntities
         /// <summary>
         /// First selection point.
         /// </summary>
-        public Location First;
+        public Vector2 First;
 
         /// <summary>
         /// Tracks mouse presses.
@@ -179,7 +185,16 @@ namespace TestRTS.GameEntities
                     }
                     Selected = null;
                 }
-                First = new Location(Engine2D.MouseCoords.X, Engine2D.MouseCoords.Y, -5f);
+                Target = null;
+                First = Engine2D.MouseCoords;
+                Entity.AddProperty(new EntitySimple2DRenderableBoxProperty()
+                {
+                    RenderAt = new Location(First.X, First.Y, 5f),
+                    BoxSize = new Vector2(0, 0),
+                    BoxColor = new Color4F(1f, 1f, 1f, 0.25f),
+                    BoxTexture = Engine2D.Textures.White,
+                    CastShadows = false
+                });
             }
         }
 
@@ -192,11 +207,12 @@ namespace TestRTS.GameEntities
         {
             if (e.Button == MouseButton.Left)
             {
-                Target = null;
+                Entity.RemoveProperty<EntitySimple2DRenderableBoxProperty>();
+                Location loc = new Location(First.X, First.Y, -5f);
                 AABB box = new AABB()
                 {
-                    Min = First,
-                    Max = First
+                    Min = loc,
+                    Max = loc
                 };
                 box.Include(new Location(Engine2D.MouseCoords.X, Engine2D.MouseCoords.Y, 5f));
                 Selected = Engine2D.PhysicsWorld.GetEntitiesInBox(box).Where((ent) => ent.GetAllInterfacedProperties<ISelectable>().Count() > 0).ToList<ClientEntity>();
